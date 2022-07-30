@@ -1,2 +1,3 @@
 # easybook
-React-GraphQL-SpringBoot. A event schedule application from scratch
+React-GraphQL-SpringBoot-PostgreSQL. 
+A event schedule application from scratch.
