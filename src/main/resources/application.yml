@@ -1,5 +1,5 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/easybook
-    username: easybook
-    password: easybookbyyuyan
+    url: jdbc:postgresql://ec2-3-213-228-206.compute-1.amazonaws.com:5432/d3rq1gj272v0od
+    username: vdtkliusjidrox
+    password: c55f19946b0ee160e22e1f0c6765b04957f3df20f1fbee07920d208c853e9c89
