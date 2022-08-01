@@ -38,7 +38,7 @@ public class EventDataFetcher {
     @DgsQuery
     public List<Event> events() {
         QueryWrapper<EventEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().apply("start_date at time zone 'edt' >= current_timestamp");
+        queryWrapper.lambda().apply("start_date >= current_timestamp");
         List<EventEntity> eventEntityList = eventEntityMapper.selectList(queryWrapper);
         List<Event> eventList = eventEntityList.stream()
                 .map(Event::fromEntity).collect(Collectors.toList());
