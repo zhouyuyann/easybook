@@ -8,7 +8,7 @@ import com.yuyanzhou.easy_book.custom.AuthContext;
 import com.yuyanzhou.easy_book.entity.BookingEntity;
 import com.yuyanzhou.easy_book.entity.EventEntity;
 import com.yuyanzhou.easy_book.entity.UserEntity;
-import com.yuyanzhou.easy_book.fetcher.dataloader.CreatorsDataLoader;
+//import com.yuyanzhou.easy_book.fetcher.dataloader.CreatorsDataLoader;
 import com.yuyanzhou.easy_book.mapper.EventEntityMapper;
 import com.yuyanzhou.easy_book.mapper.UserEntityMapper;
 import com.yuyanzhou.easy_book.mapper.BookingEntityMapper;
@@ -90,13 +90,20 @@ public class EventDataFetcher {
         return event;
     }
 
+//    @DgsData(parentType = "Event", field = "creator")
+//    public CompletableFuture<User> creator(DgsDataFetchingEnvironment dfe) {
+//        Event event = dfe.getSource();
+//        log.info("Fetching creator wit id: {}", event.getCreatorId());
+//        DataLoader<Integer, User> dataLoader = dfe.getDataLoader(CreatorsDataLoader.class);
+//
+//        return dataLoader.load(event.getCreatorId());
+//    }
     @DgsData(parentType = "Event", field = "creator")
-    public CompletableFuture<User> creator(DgsDataFetchingEnvironment dfe) {
+    public User creator(DgsDataFetchingEnvironment dfe) {
         Event event = dfe.getSource();
-        log.info("Fetching creator wit id: {}", event.getCreatorId());
-        DataLoader<Integer, User> dataLoader = dfe.getDataLoader(CreatorsDataLoader.class);
-
-        return dataLoader.load(event.getCreatorId());
+        UserEntity userEntity = userEntityMapper.selectById(event.getCreatorId());
+        User user = User.fromEntity(userEntity);
+        return user;
     }
 
     @DgsData(parentType = "Event", field = "booker")
