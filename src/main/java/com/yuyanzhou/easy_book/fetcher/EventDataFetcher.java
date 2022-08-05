@@ -8,6 +8,7 @@ import com.yuyanzhou.easy_book.custom.AuthContext;
 import com.yuyanzhou.easy_book.entity.BookingEntity;
 import com.yuyanzhou.easy_book.entity.EventEntity;
 import com.yuyanzhou.easy_book.entity.UserEntity;
+import com.yuyanzhou.easy_book.fetcher.dataloader.BookerDataLoader;
 import com.yuyanzhou.easy_book.fetcher.dataloader.CreatorsDataLoader;
 import com.yuyanzhou.easy_book.mapper.EventEntityMapper;
 import com.yuyanzhou.easy_book.mapper.UserEntityMapper;
@@ -98,5 +99,17 @@ public class EventDataFetcher {
 
         return dataLoader.load(event.getCreatorId());
     }
+
+     @DgsData(parentType = "Event", field = "booker")
+    public CompletableFuture<User> booker(DgsDataFetchingEnvironment dfe) {
+        Event event = dfe.getSource();
+        log.info("Fetching event wit id: {}", event.getId());
+
+        DataLoader<Integer, User> dataLoader = dfe.getDataLoader(BookerDataLoader.class);
+
+        return dataLoader.load(Integer.parseInt(event.getId()));
+    }
+
+
 
 }
