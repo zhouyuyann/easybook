@@ -41,7 +41,7 @@ public class BookingDataFetcher {
         List<Booking> bookings = bookingEntityMapper.selectList(queryWrapper)
                 .stream()
                 .map(Booking::fromEntity)
-                .map(booking -> (new Date().before(DateUtil.convertISOStringToDate(booking.getEvent().getStartDate())))? booking : null)
+//                .map(booking -> (new Date().before(DateUtil.convertISOStringToDate(booking.getEvent().getStartDate())))? booking : null)
                 .collect(Collectors.toList());
         return bookings;
     }
