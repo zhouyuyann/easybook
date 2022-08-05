@@ -8,7 +8,6 @@ import com.yuyanzhou.easy_book.custom.AuthContext;
 import com.yuyanzhou.easy_book.entity.BookingEntity;
 import com.yuyanzhou.easy_book.entity.EventEntity;
 import com.yuyanzhou.easy_book.entity.UserEntity;
-import com.yuyanzhou.easy_book.fetcher.dataloader.BookerDataLoader;
 import com.yuyanzhou.easy_book.fetcher.dataloader.CreatorsDataLoader;
 import com.yuyanzhou.easy_book.mapper.EventEntityMapper;
 import com.yuyanzhou.easy_book.mapper.UserEntityMapper;
@@ -21,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dataloader.DataLoader;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -100,16 +98,19 @@ public class EventDataFetcher {
         return dataLoader.load(event.getCreatorId());
     }
 
-     @DgsData(parentType = "Event", field = "booker")
-    public CompletableFuture<User> booker(DgsDataFetchingEnvironment dfe) {
+    @DgsData(parentType = "Event", field = "booker")
+    public List<User> booker(DgsDataFetchingEnvironment dfe) {
         Event event = dfe.getSource();
-        log.info("Fetching event wit id: {}", event.getId());
+        QueryWrapper<BookingEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(BookingEntity::getEventId, Integer.parseInt(event.getId()));
+        List<Integer> userIds = bookingEntityMapper.selectList(queryWrapper).stream().map(
+                bookingEntity -> bookingEntity.getUserId()).collect(Collectors.toList());
 
-        DataLoader<Integer, User> dataLoader = dfe.getDataLoader(BookerDataLoader.class);
+        return userEntityMapper.selectBatchIds(userIds)
+                .stream().map(userEntity -> User.fromEntity(userEntity))
+                .collect(Collectors.toList());
 
-        return dataLoader.load(Integer.parseInt(event.getId()));
     }
-
 
 
 }
