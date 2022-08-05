@@ -14,6 +14,7 @@ import com.yuyanzhou.easy_book.mapper.UserEntityMapper;
 import com.yuyanzhou.easy_book.type.Booking;
 import com.yuyanzhou.easy_book.type.Event;
 import com.yuyanzhou.easy_book.type.User;
+import com.yuyanzhou.easy_book.util.DateUtil;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,7 @@ public class BookingDataFetcher {
         List<Booking> bookings = bookingEntityMapper.selectList(queryWrapper)
                 .stream()
                 .map(Booking::fromEntity)
+                .map(booking -> (new Date().before(DateUtil.convertISOStringToDate(booking.getEvent().getStartDate())))? booking : null)
                 .collect(Collectors.toList());
         return bookings;
     }
