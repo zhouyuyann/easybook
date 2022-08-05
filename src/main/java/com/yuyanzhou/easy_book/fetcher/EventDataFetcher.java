@@ -106,7 +106,10 @@ public class EventDataFetcher {
         List<Integer> userIds = bookingEntityMapper.selectList(queryWrapper).stream().map(
                 bookingEntity -> bookingEntity.getUserId()).collect(Collectors.toList());
 
-        return userEntityMapper.selectBatchIds(userIds)
+        QueryWrapper<UserEntity> userEntityQueryWrapper = new QueryWrapper<>();
+        userEntityQueryWrapper.lambda().in(UserEntity::getId, userIds);
+
+        return userEntityMapper.selectList(userEntityQueryWrapper)
                 .stream().map(userEntity -> User.fromEntity(userEntity))
                 .collect(Collectors.toList());
 
